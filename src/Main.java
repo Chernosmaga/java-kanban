@@ -1,11 +1,11 @@
-import manager.Manager;
+import manager.InMemoryManager;
 import task.Epic;
 import task.Status;
 import task.Subtask;
 import task.Task;
 
 public class Main {
-    static Manager manager = new Manager();
+    static InMemoryManager manager = new InMemoryManager();
     public static void main(String[] args) {
 
         // создаю задачу и добавляю в мапу
@@ -52,6 +52,14 @@ public class Main {
         System.out.println("Tasks: " + manager.getTasks());
         System.out.println("Epics: " + manager.getEpics());
         System.out.println("Subtasks: " + manager.getSubtasks());
+
+        // получение рандомной Задачи и Эпика
+        manager.getTaskById(5);
+        manager.getEpicById(2);
+
+        // печать истории полученной Задачи и Эпика
+        System.out.println("There's the history :\n" + manager.getHistory());
+
 
     }
 }

@@ -6,7 +6,6 @@ public class Task {
     protected String description; // описание задачи
     protected Integer id = 0; // идентификатор задачи, если его не проинициализировать, то NullPointerException
     protected Status status; // статус задачи
-
     public Task(String name, String description, Integer id, Status status) { // конструктор для менеджера
         this.name = name;
         this.description = description;
@@ -53,4 +52,5 @@ public class Task {
                 ", status='" + status + '\'' +
                 '}';
     }
+
 }
