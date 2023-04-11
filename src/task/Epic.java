@@ -3,7 +3,7 @@ package task;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    public static ArrayList<Integer> subtasksIds = new ArrayList<>(); // лист с идентификаторами подзадач
+    private static ArrayList<Integer> subtasksIds = new ArrayList<>(); // лист с идентификаторами подзадач
 
     public Epic(String name, String description, Integer id, Status status) { // конструктор для менеджера
         super(name, description, id, status);
@@ -13,7 +13,7 @@ public class Epic extends Task {
         super(name, description, status);
     }
 
-    public ArrayList<Integer> getSubtasksIds() {
+    public static ArrayList<Integer> getSubtasksIds() {
         return subtasksIds;
     }
 
@@ -24,10 +24,10 @@ public class Epic extends Task {
     @Override
     public String toString() {
         return "Epic{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + status + '\'' +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", id=" + getId() +
+                ", status='" + getStatus() + '\'' +
                 '}';
     }
 

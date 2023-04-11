@@ -2,7 +2,7 @@ package task;
 
 public class Subtask extends Task {
 
-    Epic epic;
+    private Epic epic;
     public Subtask(String name, String description, Integer id, Status status) { // конструктор для менеджера
         super(name, description, id, status);
     }
@@ -23,10 +23,10 @@ public class Subtask extends Task {
     @Override
     public String toString() {
         return "Subtask{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status='" + status + '\'' +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", id=" + getId() +
+                ", status='" + getStatus() + '\'' +
                 '}';
     }
 

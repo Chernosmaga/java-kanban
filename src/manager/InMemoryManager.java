@@ -11,11 +11,11 @@ import java.util.List;
 
 public class InMemoryManager implements Manager {
 
-    protected int id;
-    protected HashMap<Integer, Task> tasks;
-    protected HashMap<Integer, Subtask> subtasks;
-    protected HashMap<Integer, Epic> epics;
-    HistoryManager historyManager;
+    private int id;
+    private HashMap<Integer, Task> tasks;
+    private HashMap<Integer, Subtask> subtasks;
+    private HashMap<Integer, Epic> epics;
+    private HistoryManager historyManager;
 
     public InMemoryManager() {
         id = 0; // если не проинициализировать, то схвачу NullPointerException
@@ -26,7 +26,7 @@ public class InMemoryManager implements Manager {
     }
 
     @Override
-    public void addTask(Task task) { // создание задачи
+    public void addTask(Task task) {
         task.setId(++id); // префиксная инкрементация, не знаю почему, но иначе не работает
         tasks.put(id, task);
     }
@@ -34,7 +34,9 @@ public class InMemoryManager implements Manager {
     @Override
     public Task getTaskById(int id) { // получение задачи по идентификатору
         Task task = tasks.getOrDefault(id, null); // обязательно проверяю на null, чтоб не схватить ошибку
-        historyManager.addTask(task);
+        if (id != 0) {
+            historyManager.addTask(task);
+        }
         return task;
     }
 
@@ -106,7 +108,7 @@ public class InMemoryManager implements Manager {
     public void addSubtask(Subtask subtask) { // добавление подзадачи
         subtask.setId(++id);
         subtasks.put(id, subtask);
-        Epic.subtasksIds.add(id);
+        Epic.getSubtasksIds().add(id);
     }
 
     @Override
