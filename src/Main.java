@@ -56,6 +56,7 @@ public class Main {
         // получение рандомной Задачи и Эпика
         manager.getTaskById(5);
         manager.getEpicById(2);
+        manager.getTaskById(1);
 
         // печать истории полученной Задачи и Эпика
         System.out.println("There's the history :\n" + manager.getHistory());
