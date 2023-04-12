@@ -15,22 +15,22 @@ public class InHistoryManager implements HistoryManager {
 
     @Override
     public void addTask(Task task) {
-        if (viewedTasks.size() <= 10) { // проверяю, чтоб лист не превышал 10 элементов
-            viewedTasks.add(task);
-        } else {
+        if (viewedTasks.size() >= 10) { // проверяю, чтоб лист не превышал 10 элементов
             removeTask(task.getId()); // если больше 10, то задача удаляется
+        } else {
+            viewedTasks.add(task);
         }
     }
 
     @Override
     public void removeTask(int id) {
-        // этот метод я оставил, потому что при удалении Объекта из мапы в классе InMemoryManager
+        // при удалении Объекта из мапы в классе InMemoryManager
         // нужно так же удалить его из листа просмотренных задач, потому что его больше не существует
         viewedTasks.remove(viewedTasks.get(id));
     }
 
     @Override
-    public List<Task> getHistory() { // непосредственно, получаю историю
+    public List<Task> getHistory() {
         return viewedTasks;
     }
 
