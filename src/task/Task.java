@@ -2,20 +2,20 @@ package task;
 
 public class Task {
 
-    private String name; // название задачи
-    private String description; // описание задачи
-    private Integer id = 0; // идентификатор задачи, если его не проинициализировать, то NullPointerException
-    private Status status; // статус задачи
+    private String title;
+    private String description;
+    private Integer id = 0; // если идентификатор не проинициализировать, то NullPointerException
+    private Status status;
 
-    public Task(String name, String description, Integer id, Status status) { // конструктор для менеджера
-        this.name = name;
+    public Task(String title, String description, Integer id, Status status) { // конструктор для менеджера
+        this.title = title;
         this.description = description;
         this.id = id;
         this.status = status;
     }
 
-    public Task(String name, String description, Status status) { // конструктор для пользователя
-        this.name = name;
+    public Task(String title, String description, Status status) { // конструктор для пользователя
+        this.title = title;
         this.description = description;
         this.status = status;
     }
@@ -28,12 +28,12 @@ public class Task {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
     public void setDescription(String description) {
@@ -55,7 +55,7 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "name='" + name + '\'' +
+                "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status='" + status + '\'' +

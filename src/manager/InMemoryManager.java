@@ -32,7 +32,7 @@ public class InMemoryManager implements Manager {
     }
 
     @Override
-    public Task getTaskById(int id) { // получение задачи по идентификатору
+    public Task getTaskById(int id) {
         Task task = tasks.getOrDefault(id, null); // обязательно проверяю на null, чтоб не схватить ошибку
         if (id != 0) {
             historyManager.addTask(task);
@@ -61,16 +61,16 @@ public class InMemoryManager implements Manager {
     }
 
     @Override
-    public void addEpic(Epic epic) { // добавление эпика
+    public void addEpic(Epic epic) {
         epic.setId(++id);
-        epic.setStatus(Status.NEW); // устанавливаю сразу же статус для нового эпика
+        epic.setStatus(Status.NEW); // сразу же устанавливаю статус для нового эпика
         epics.put(id, epic);
     }
 
     @Override
-    public Epic getEpicById(int id) { // получение эпика по идентификатору
+    public Epic getEpicById(int id) {
         Epic epic = epics.getOrDefault(id, null);
-        historyManager.addTask(epic); // обновляю лист просмотренных задач, новый элемент добавляю в конец списка
+        historyManager.addTask(epic); // новый элемент добавляю в конец списка просмотренных задач
         return epic;
     }
 
@@ -85,14 +85,14 @@ public class InMemoryManager implements Manager {
     }
 
     @Override
-    public void updateEpic(Epic epic) { // обновление эпика
+    public void updateEpic(Epic epic) {
         epic.setSubtasksIds(epics.get(epic.getId()).getSubtasksIds());
         epics.put(epic.getId(), epic);
         statusUpdate(epic); // обновление статуса
     }
 
     @Override
-    public void deleteEpicById(int id) { // удаление эпика по идентификатору
+    public void deleteEpicById(int id) {
         if (epics.containsKey(id)) { // проверяю наличие идентификатора
             Epic epic = epics.get(id);
             epics.remove(id);
@@ -105,21 +105,21 @@ public class InMemoryManager implements Manager {
     }
 
     @Override
-    public void addSubtask(Subtask subtask) { // добавление подзадачи
+    public void addSubtask(Subtask subtask) {
         subtask.setId(++id);
         subtasks.put(id, subtask);
         Epic.getSubtasksIds().add(id);
     }
 
     @Override
-    public Subtask getSubtaskById(int id) { // получение подзадачи по идентификатору
+    public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.getOrDefault(id, null);
         historyManager.addTask(subtask); // обновляю список просмотренных задач, новый элемент добавляю в конец списка
         return subtask;
     }
 
     @Override
-    public void deleteSubtasks() { // удаление всех подзадач
+    public void deleteSubtasks() {
         ArrayList<Epic> epicsForUpdate = new ArrayList<>(); // новый лист, чтоб сложить туда значения из мапы подзадач
         for (Subtask subtask : subtasks.values()) {
             subtask.getEpic().setSubtasksIds(new ArrayList<>()); // снова обновляю лист с идентификаторами подзадач
@@ -140,13 +140,13 @@ public class InMemoryManager implements Manager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) { // обновление подзадачи
+    public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
-        statusUpdate(subtask.getEpic());// обновление статуса
+        statusUpdate(subtask.getEpic());
     }
 
     @Override
-    public void deleteSubtaskById(int id) { // удаление подзадачи по идентификатору
+    public void deleteSubtaskById(int id) {
         if (subtasks.containsKey(id)) {
             Epic epic = subtasks.get(id).getEpic();
             epic.getSubtasksIds().remove(id); // при удалении подзадачи нужно так же удалить идентификатор из листа
