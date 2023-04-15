@@ -7,7 +7,7 @@ import java.util.List;
 
 public class InHistoryManager implements HistoryManager {
 
-    protected List<Task> viewedTasks; // лист для хранения просмотренных задач
+    private List<Task> viewedTasks; // лист для хранения просмотренных задач
 
     public InHistoryManager() {
         this.viewedTasks = new ArrayList<>();
@@ -17,7 +17,6 @@ public class InHistoryManager implements HistoryManager {
     public void addTask(Task task) {
         if (viewedTasks.size() >= 10) { // проверяю, чтоб лист не превышал 10 элементов
             viewedTasks.remove(0); // если больше 10, то задача удаляется
-            viewedTasks.add(task);
         } else {
             viewedTasks.add(task);
         }
