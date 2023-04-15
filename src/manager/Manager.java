@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface Manager {
 
-
     void addTask(Task task);
 
     Task getTaskById(int id);
