@@ -17,9 +17,8 @@ public class InHistoryManager implements HistoryManager {
     public void addTask(Task task) {
         if (viewedTasks.size() >= 10) { // проверяю, чтоб лист не превышал 10 элементов
             viewedTasks.remove(0); // если больше 10, то задача удаляется
-        } else {
-            viewedTasks.add(task);
         }
+            viewedTasks.add(task);
     }
 
     @Override
