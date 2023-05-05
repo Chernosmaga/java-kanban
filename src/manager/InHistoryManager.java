@@ -16,11 +16,7 @@ public class InHistoryManager implements HistoryManager {
     @Override
     public void add(Task task) {
         Node<Task> node = linkLast(task); // беру возвращаемую ноду
-        if (receivedTasksMap.containsKey(task.getId())) {
-            removeNode(node);
-        } else {
-            receivedTasksMap.put(task.getId(), node); // добавляю в мапу
-        }
+        receivedTasksMap.put(task.getId(), node); // добавляю в мапу
     }
 
     @Override
@@ -39,13 +35,21 @@ public class InHistoryManager implements HistoryManager {
 
     public Node<Task> linkLast(Task task) {
         final Node<Task> oldTail = tail;
-        // наставник сказал, что лучше значение добавить в начало
         final Node<Task> newNode = new Node<>(task, tail, null);
         tail = newNode;
         if (oldTail == null) {
             head = newNode;
         } else {
             oldTail.setNext(newNode);
+        }
+        // я знаю, что добавив метод удаления ноды сюда, я отхожу от ТЗ, но иначе я не знаю как мне реализовать метод
+        // проверки и удаление существующей задачи
+        // наставник сказал, что можно просто поменять ссылки на элемент, но это снова я буду отходить от ТЗ
+        // если какая-либо из этих реализаций подойдёт, то ок, если нет, то снова прошу дать подсказку, потому что
+        // уже запутался и не знаю что делать
+        if (receivedTasksMap.containsKey(task.getId())) {
+            receivedTasksMap.remove(newNode);
+            removeNode(newNode);
         }
         return newNode;
     }
