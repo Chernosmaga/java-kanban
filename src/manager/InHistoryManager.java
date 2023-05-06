@@ -21,10 +21,8 @@ public class InHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        for (Node<Task> node : receivedTasksMap.values()) {
-            Node<Task> lookedForNode = receivedTasksMap.get(node); // получаю ноду, которую искал по идентификатору
-            removeNode(lookedForNode); // удаляю ноду
-            receivedTasksMap.remove(lookedForNode); // удаляю ноду из мапы
+        for (Integer identifier : receivedTasksMap.keySet()) {
+            receivedTasksMap.remove(identifier); // получаю идентификатор ноды и удаляю данные
         }
     }
 
@@ -42,11 +40,6 @@ public class InHistoryManager implements HistoryManager {
         } else {
             oldTail.setNext(newNode);
         }
-        // я знаю, что добавив метод удаления ноды сюда, я отхожу от ТЗ, но иначе я не знаю как мне реализовать метод
-        // проверки и удаление существующей задачи
-        // наставник сказал, что можно просто поменять ссылки на элемент, но это снова я буду отходить от ТЗ
-        // если какая-либо из этих реализаций подойдёт, то ок, если нет, то снова прошу дать подсказку, потому что
-        // уже запутался и не знаю что делать
         if (receivedTasksMap.containsKey(task.getId())) {
             receivedTasksMap.remove(newNode);
             removeNode(newNode);
