@@ -15,15 +15,13 @@ public class InHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (task != null) {
-            remove(task.getId());
-            linkLast(task);
-        }
+        remove(task.getId()); // если задача будет повторяться, то я её удалю
+        linkLast(task); // и добавлю в конец
     }
 
     @Override
     public void remove(int id) {
-        removeNode(receivedTasksMap.get(id));
+        removeNode(receivedTasksMap.get(id)); // удаляю ноду по идентификатору
     }
 
     @Override
@@ -35,6 +33,7 @@ public class InHistoryManager implements HistoryManager {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node<>(task, tail, null);
         tail = newNode;
+        // вот здесь как раз получаю идентификатор задачи и привязываю его к ноде, добавляя в мапу
         receivedTasksMap.put(task.getId(), newNode);
         if (oldTail == null) {
             head = newNode;
