@@ -15,15 +15,15 @@ public class InHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        Node<Task> node = linkLast(task); // беру возвращаемую ноду
-        receivedTasksMap.put(task.getId(), node); // добавляю в мапу
+        if (task != null) {
+            remove(task.getId());
+            linkLast(task);
+        }
     }
 
     @Override
     public void remove(int id) {
-        for (Integer identifier : receivedTasksMap.keySet()) {
-            receivedTasksMap.remove(identifier); // получаю идентификатор ноды и удаляю данные
-        }
+        removeNode(receivedTasksMap.get(id));
     }
 
     @Override
@@ -35,14 +35,11 @@ public class InHistoryManager implements HistoryManager {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node<>(task, tail, null);
         tail = newNode;
+        receivedTasksMap.put(task.getId(), newNode);
         if (oldTail == null) {
             head = newNode;
         } else {
             oldTail.setNext(newNode);
-        }
-        if (receivedTasksMap.containsKey(task.getId())) {
-            receivedTasksMap.remove(newNode);
-            removeNode(newNode);
         }
         return newNode;
     }
