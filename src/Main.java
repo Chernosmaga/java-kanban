@@ -1,13 +1,13 @@
-import manager.InHistoryManager;
-import manager.InMemoryManager;
-import task.Epic;
-import task.Status;
-import task.Subtask;
-import task.Task;
+import managers.FileBackedTasksManager;
+import managers.InHistoryManager;
+import managers.InMemoryManager;
+import tasks.Epic;
+import tasks.Status;
+import tasks.Subtask;
+import tasks.Task;
 
 public class Main {
     static InMemoryManager manager = new InMemoryManager();
-    static InHistoryManager historyManager = new InHistoryManager();
     public static void main(String[] args) {
 
         // создаю задачу и добавляю в мапу
@@ -63,6 +63,8 @@ public class Main {
 
         // печать истории полученной Задачи и Эпика
         System.out.println("There's the history :\n" + manager.getHistory());
+
+        //System.out.println(files.save());
 
     }
 }
