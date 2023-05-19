@@ -5,7 +5,7 @@ import tasks.Task;
 import java.util.*;
 
 public class InHistoryManager implements HistoryManager {
-    private Map<Integer, Node<Task>> receivedTasksMap;
+    private final Map<Integer, Node<Task>> receivedTasksMap;
     private Node<Task> head;
     private Node<Task> tail;
 
@@ -31,7 +31,7 @@ public class InHistoryManager implements HistoryManager {
         return getTasks();
     }
 
-    public Node<Task> linkLast(Task task) {
+    public void linkLast(Task task) {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node<>(task, tail, null);
         tail = newNode;
@@ -42,7 +42,6 @@ public class InHistoryManager implements HistoryManager {
         } else {
             oldTail.setNext(newNode);
         }
-        return newNode;
     }
 
     public List<Task> getTasks() {
@@ -64,10 +63,10 @@ public class InHistoryManager implements HistoryManager {
             if (head == node && tail == node) {
                 head = null;
                 tail = null;
-            } else if (head == node && !(tail == node)) {
+            } else if (head == node && tail != node) {
                 head = next;
                 head.setPrevious(null);
-            } else if (!(head == node) && tail == node) {
+            } else if (head != node && tail == node) {
                 tail = previous;
                 tail.setNext(null);
             } else {
