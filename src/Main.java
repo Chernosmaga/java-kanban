@@ -1,5 +1,3 @@
-import managers.FileBackedTasksManager;
-import managers.InHistoryManager;
 import managers.InMemoryManager;
 import tasks.Epic;
 import tasks.Status;
@@ -63,8 +61,6 @@ public class Main {
 
         // печать истории полученной Задачи и Эпика
         System.out.println("There's the history :\n" + manager.getHistory());
-
-        //System.out.println(files.save());
 
     }
 }
