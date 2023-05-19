@@ -12,16 +12,15 @@ import java.util.*;
 import static tasks.Type.*;
 
 public class FileBackedTasksManager extends InMemoryManager {
-    private static File file;
+    private File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
-        file = new File("back up.csv");
         if (!file.isFile()) {
             try {
-                Path path = Files.createFile(Paths.get("back up.csv"));
+                Path path = Files.createFile(Paths.get("resources/back up.csv"));
             } catch (IOException exception) {
-                throw new ManagerSaveException("There is a problem creating a file, maybe it's already exists");
+                throw new ManagerSaveException("There is a problem with creating a file, maybe it already exists");
             }
         }
     }
@@ -115,7 +114,7 @@ public class FileBackedTasksManager extends InMemoryManager {
         save();
     }
 
-    public void save() {
+    private void save() {
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,title,status,description,epic\n");
             HashMap<Integer, String> allTasks = new HashMap<>();
@@ -145,11 +144,11 @@ public class FileBackedTasksManager extends InMemoryManager {
             }
 
         } catch (IOException exception) {
-            throw new ManagerSaveException("Unable to read file");
+            throw new ManagerSaveException("Unable to write file");
         }
     }
 
-     public static Task fromString(String content, Type type, FileBackedTasksManager manager) {
+    private static Task fromString(String content, Type type, FileBackedTasksManager manager) {
         Task task = new Task();
         String epicId = null;
         String[] elements = content.split(",");
@@ -250,7 +249,6 @@ public class FileBackedTasksManager extends InMemoryManager {
                         }
                         fileBackedTasksManager.tasks.put(id, task);
                         break;
-
                 }
             } else {
                 history = line;
@@ -264,41 +262,4 @@ public class FileBackedTasksManager extends InMemoryManager {
         return fileBackedTasksManager;
     }
 
-    public static void main(String[] args) {
-
-        System.out.println("Creating the first manager...\n");
-        FileBackedTasksManager fileBackedTaskManagerFirst = new FileBackedTasksManager(new File("back up.csv"));
-
-        System.out.println("Creating tasks and adding them into manager...");
-        Task task1 = new Task("First task", "Here's the first task", Status.NEW);
-        fileBackedTaskManagerFirst.addTask(task1);
-        Task task2 = new Task("Second task", "This is the second one", Status.NEW);
-        fileBackedTaskManagerFirst.addTask(task2);
-        Epic epic1 = new Epic("First epic", "The first epic", Status.DONE);
-        fileBackedTaskManagerFirst.addEpic(epic1);
-        Epic epic2 = new Epic("Second epic", "Here's the second epic", Status.DONE);
-        fileBackedTaskManagerFirst.addEpic(epic2);
-        Subtask subtask1 = new Subtask("First subtask", "Subtask number one", Status.IN_PROGRESS, epic1);
-        fileBackedTaskManagerFirst.addSubtask(subtask1);
-        Subtask subtask2 = new Subtask("Second subtask", "The second subtask", Status.NEW, epic2);
-        fileBackedTaskManagerFirst.addSubtask(subtask2);
-
-        fileBackedTaskManagerFirst.getTaskById(2);
-        fileBackedTaskManagerFirst.getEpicById(3);
-        fileBackedTaskManagerFirst.getSubtaskById(5);
-
-        System.out.println("\nThere is the history:");
-        System.out.println(fileBackedTaskManagerFirst.getHistory());
-
-        System.out.println("\nCreating the second manager...");
-        FileBackedTasksManager fileBackedTaskManagerSecond = loadFromFile(file);
-
-        System.out.println("\nThe history for the second manager:");
-        System.out.println(fileBackedTaskManagerSecond.getHistory());
-
-        System.out.println("\nThese are tasks of a manager:");
-        System.out.println(fileBackedTaskManagerSecond.getTasks());
-        System.out.println(fileBackedTaskManagerSecond.getEpics());
-        System.out.println(fileBackedTaskManagerSecond.getSubtasks());
-    }
 }
