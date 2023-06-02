@@ -1,29 +1,59 @@
 package tasks;
 
+import enums.Status;
+import enums.Type;
+import memory.InMemoryManager;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Epic extends Task {
-    private static ArrayList<Integer> subtasksIds = new ArrayList<>(); // лист с идентификаторами подзадач
+    private ArrayList<Integer> subtasksIds = new ArrayList<>();
     private Type type;
+    private static Instant endTime = Instant.ofEpochSecond(32503669200000L);
 
-    public Epic(String title, String description, Integer id, Status status) { // конструктор для менеджера
+    public Epic(String title, String description, Integer id, Status status) {
         super(title, description, id, status);
-        this.type = type.EPIC;
+        this.type = Type.EPIC;
     }
 
-    public Epic(String title, String description, Status status) { // конструктор для пользователя
+    public Epic(String title, String description, Status status) {
         super(title, description, status);
-        this.type = type.EPIC;
+        this.type = Type.EPIC;
+    }
+
+    public Epic(String title, String description, long duration, Instant startTime, Status status) {
+        super(title, description, duration, startTime, status);
+        this.endTime = super.getEndTime();
+        this.type = Type.EPIC;
+    }
+
+    public Epic(int id, String title, String description, long duration, Instant startTime, Status status) {
+        super(id, title, description, duration, startTime, status);
+        this.endTime = super.getEndTime();
+        this.type = Type.EPIC;
     }
 
     public Epic() {}
 
-    public static ArrayList<Integer> getSubtasksIds() {
+    public ArrayList<Integer> getSubtasksIds() {
         return subtasksIds;
     }
 
     public void setSubtasksIds(ArrayList<Integer> subtasksIds) {
-        Epic.subtasksIds = subtasksIds;
+        this.subtasksIds = subtasksIds;
+    }
+
+    @Override
+    public Instant getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Instant endTime) {
+        Epic.endTime = endTime;
     }
 
     @Override
@@ -37,14 +67,14 @@ public class Epic extends Task {
                 "title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
-                ", status='" + getStatus() + '\'' +
-                '}';
+                ", status='" + getStatus() + ", start time=" + getStartTime().toEpochMilli() +
+                ", duration=" + getDuration() + ", end time=" + getEndTime().toEpochMilli() + '\'' + '}';
     }
 
     @Override
     public String toStringFromFile() {
-        return String.format("%s,%s,%s,%s,%s,%s", getId(), getType(), getTitle(),
-                getStatus(), getDescription(),"");
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getId(), getType(), getTitle(),
+                getStatus(), getDescription(), getStartTime(), getDuration(), "");
     }
 
 }
