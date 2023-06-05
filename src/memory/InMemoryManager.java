@@ -16,9 +16,9 @@ public class InMemoryManager implements Manager {
     protected HashMap<Integer, Epic> epics = new HashMap<>();
     protected HistoryManager historyManager;
     // компаратор для сравнения задач по типу времени начала
-    private Comparator<Task> comparator = Comparator.comparing(Task::getStartTime);
+    private final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime);
     // сет из отсортированных задач по компаратору
-    private Set<Task> prioritizedTasks = new TreeSet<>(comparator);
+    private final Set<Task> prioritizedTasks = new TreeSet<>(comparator);
 
     public InMemoryManager() {
         id = 0;
@@ -29,12 +29,17 @@ public class InMemoryManager implements Manager {
         this.historyManager = historyManager;
     }
 
+    private int idIncrease() {
+        return ++id;
+    }
+
     @Override
     public Task addTask(Task task) {
         if (task != null) {
-            task.setId(id++);
-                tasks.put(id, task);
-                addTaskToPrioritizedList(task);
+            int newId = idIncrease();
+            task.setId(newId);
+            tasks.put(newId, task);
+            addTaskToPrioritizedList(task);
         } else {
             return null;
         }
@@ -87,8 +92,9 @@ public class InMemoryManager implements Manager {
     @Override
     public Epic addEpic(Epic epic) {
         if (epic != null) {
-            epic.setId(++id);
-            epics.put(id, epic);
+            int newId = idIncrease();
+            epic.setId(newId);
+            epics.put(newId, epic);
         } else {
             return null;
         }
@@ -141,19 +147,19 @@ public class InMemoryManager implements Manager {
             }
             epics.remove(id);
             historyManager.remove(epic.getId());
-            epic.setSubtasksIds(new ArrayList<>());
         }
     }
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
         if (subtask != null) {
-            subtask.setId(++id);
+            int newId = idIncrease();
+            subtask.setId(newId);
             Epic epic = epics.get(subtask.getEpicId());
             if (epic != null) {
                 addTaskToPrioritizedList(subtask);
-                subtasks.put(id, subtask);
-                epic.getSubtasksIds().add(id);
+                subtasks.put(newId, subtask);
+                epic.setSubtasksIds(newId);
                 statusUpdate(epic);
                 updateEpicTime(epic);
             }
