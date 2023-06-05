@@ -150,7 +150,6 @@ public class FileBackedManager extends InMemoryManager {
 
     private static Task fromString(String content) {
         Task task = new Task();
-        String epicId = null;
         String[] elements = content.split(",");
         int id = Integer.parseInt(elements[0]);
         Type type = Type.valueOf(elements[1]);
@@ -159,14 +158,15 @@ public class FileBackedManager extends InMemoryManager {
         String description = elements[4];
         Instant startTime = Instant.parse(elements[5]);
         long duration = Long.parseLong(elements[6]);
+        int epicId = 0;
         if (elements.length == 8) {
-            epicId = elements[7];
+            epicId = Integer.parseInt(elements[7]);
         }
 
         if (type == TASK) {
             return new Task(id, title, description, duration, startTime, status);
         } else if (type == SUBTASK) {
-            return new Subtask(Integer.valueOf(epicId), title, description, duration, startTime, status);
+            return new Subtask(epicId, title, description, duration, startTime, id, status);
         } else if (type == EPIC) {
             return new Epic(id, title, description, duration, startTime, status);
         }
