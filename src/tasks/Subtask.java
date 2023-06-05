@@ -8,30 +8,29 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {
-
-    private Epic epic;
     private Type type;
-    private Integer epicId;
+    private int epicId;
 
-    public Subtask(String title, String description, Integer id, Status status) {
+    public Subtask(int epicId, String title, String description, Integer id, Status status) {
         super(title, description, id, status);
+        this.epicId = epicId;
         this.type = Type.SUBTASK;
     }
 
-    public Subtask(String title, String description, Status status, Epic epic) {
-        super(title, description, status);
-        this.epic = epic;
-        this.type = Type.SUBTASK;
-    }
-
-    public Subtask(String title, String description, int id, Status status, Epic epic) {
+    public Subtask(String title, int epicId,  String description, int id, Status status) {
         super(title, description, id, status);
-        this.epic = epic;
+        this.epicId = epicId;
         this.type = Type.SUBTASK;
     }
 
-    public Subtask(Integer epicId, String title, String description, long duration, Instant startTime, Status status) {
-        super(title, description, duration, startTime, status);
+    public Subtask(int epicId, String title, String description, int id, Status status) {
+        super(title, description, id, status);
+        this.epicId = epicId;
+        this.type = Type.SUBTASK;
+    }
+
+    public Subtask(int epicId, String title, String description, long duration, Instant startTime, int id, Status status) {
+        super(id, title, description, duration, startTime, status);
         this.epicId = epicId;
         this.type = Type.SUBTASK;
     }
@@ -42,10 +41,6 @@ public class Subtask extends Task {
         return epicId;
     }
 
-    public Epic getEpic() { // метод для получения эпика определённой подзадачи
-        return epic;
-    }
-
     @Override
     public Type getType() {
         return type;
@@ -54,6 +49,7 @@ public class Subtask extends Task {
     @Override
     public String toString() {
         return "Subtask{" +
+                "epic id= " + getEpicId() +
                 "title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
@@ -63,7 +59,7 @@ public class Subtask extends Task {
 
     @Override
     public String toStringFromFile() {
-        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", epic.getId(),  getId(), getType(), getTitle(),
+        return String.format("%s,%s,%s,%s,%s,%s,%s,%s", getEpicId(),  getId(), getType(), getTitle(),
                 getStatus(), getDescription(), getStartTime(), getDuration());
     }
 

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private ArrayList<Integer> subtasksIds = new ArrayList<>();
+    private final ArrayList<Integer> subtasksIds = new ArrayList<>();
     private Type type;
     private static Instant endTime = Instant.ofEpochSecond(32503669200000L);
 
@@ -20,14 +20,8 @@ public class Epic extends Task {
         this.type = Type.EPIC;
     }
 
-    public Epic(String title, String description, Status status) {
-        super(title, description, status);
-        this.type = Type.EPIC;
-    }
-
-    public Epic(String title, String description, long duration, Instant startTime, Status status) {
-        super(title, description, duration, startTime, status);
-        this.endTime = super.getEndTime();
+    public Epic(int id, String title, String description, Status status) {
+        super(id, title, description, status);
         this.type = Type.EPIC;
     }
 
@@ -43,8 +37,8 @@ public class Epic extends Task {
         return subtasksIds;
     }
 
-    public void setSubtasksIds(ArrayList<Integer> subtasksIds) {
-        this.subtasksIds = subtasksIds;
+    public void setSubtasksIds(int id) {
+        subtasksIds.add(id);
     }
 
     @Override

@@ -10,10 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Formatter;
 
 public class Task {
-
     private String title;
     private String description;
-    private Integer id = 0;
+    private int id;
     private Status status;
     private Type type;
     private Instant startTime = Instant.now();
@@ -27,18 +26,10 @@ public class Task {
         this.type = Type.TASK;
     }
 
-    public Task(String title, String description, Status status) {
+    public Task(int id, String title, String description, Status status) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.status = status;
-        this.type = Type.TASK;
-    }
-
-    public Task(String title, String description, long duration, Instant startTime, Status status) {
-        this.title = title;
-        this.description = description;
-        this.duration = duration;
-        this.startTime = startTime;
         this.status = status;
         this.type = Type.TASK;
     }
@@ -52,6 +43,8 @@ public class Task {
         this.status = status;
         this.type = Type.TASK;
     }
+
+    public Task() {}
 
     public Instant getEndTime() {
         long seconds = 60L;
@@ -107,7 +100,7 @@ public class Task {
         return "Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", id=" + id +
+                ", id=" + getId() +
                 ", status='" + status + ", start time=" + startTime.toEpochMilli() +
                 ", duration=" + duration + ", end time=" + getEndTime().toEpochMilli() + '\'' + '}';
     }
