@@ -15,9 +15,12 @@ class InHistoryManagerTest {
 
     private HistoryManager historyManager;
 
-    Task task = new Task(1, "Task 1", "Groceries", 0,  Instant.now(), Status.NEW);
-    Task task2 = new Task(2, "Task 2", "Sport", 0, Instant.now(), Status.IN_PROGRESS);
-    Task task3 = new Task(3, "Task 3", "Household chores", 0, Instant.now(), Status.DONE);
+    private final Task task = new Task(1, "Task 1", "Groceries", 0,
+            Instant.now(), Status.NEW);
+    private final Task task2 = new Task(2, "Task 2", "Sport", 0,
+            Instant.now(), Status.IN_PROGRESS);
+    private final Task task3 = new Task(3, "Task 3", "Household chores", 0,
+            Instant.now(), Status.DONE);
 
     @BeforeEach
     void beforeEach() {
@@ -33,14 +36,14 @@ class InHistoryManagerTest {
     }
 
     @Test
-    void add_shouldReturnNullBecauseTaskIsEmpty() {
+    void add_shouldReturnNullIfTaskIsEmpty() {
         historyManager.add(null);
 
         assertTrue(historyManager.getHistory().isEmpty());
     }
 
     @Test
-    void add_shouldReturnAnEmptyListBecauseThereIsNoHistory() {
+    void add_shouldReturnAnEmptyListIfThereIsNoHistory() {
         assertTrue(historyManager.getHistory().isEmpty());
     }
 
@@ -54,7 +57,7 @@ class InHistoryManagerTest {
     }
 
     @Test
-    void remove_shouldDoNothingBecausePassedIdIsIncorrect() {
+    void remove_shouldDoNothingIfPassedIdIsIncorrect() {
         Task thisTask = historyManager.add(task);
         Task thisTask1 = historyManager.add(task2);
 

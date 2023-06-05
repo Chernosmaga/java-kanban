@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
-import tasks.Subtask;
 import tasks.Task;
 
 import java.io.File;
@@ -24,9 +23,10 @@ class FileBackedManagerTest extends ManagerTest<FileBackedManager> {
     private final Path path = Path.of("resources/back up.csv");
     private final File file = new File(String.valueOf(path));
 
-    Task task = new Task(1, "Task 1", "Groceries", 0,  Instant.now(), Status.NEW);
-    Epic epic = new Epic(2, "Epic 1", "Go to the shop", 0, Instant.now(), Status.NEW);
-    Subtask subtask = new Subtask(2, "Shopping", "Bread", 0, Instant.now(), Status.NEW);
+    private final Task task = new Task(1, "Task 1", "Groceries", 0,
+            Instant.now(), Status.NEW);
+    private final Epic epic = new Epic(2, "Epic 1", "Go to the shop", 0,
+            Instant.now(), Status.NEW);
 
     @BeforeEach
     void beforeEach() {

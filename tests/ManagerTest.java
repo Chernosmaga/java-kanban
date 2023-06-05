@@ -12,9 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 abstract class ManagerTest<T extends Manager> {
     protected T manager;
-    Task task = new Task("Task 1", "Groceries", 0,  Instant.now(), Status.NEW);
-    Epic epic = new Epic("Epic 1", "Go to the shop", 0, Instant.now(), Status.NEW);
-    Subtask subtask = new Subtask(1, "Shopping", "Bread", 0, Instant.now(), Status.NEW);
+    private final Task task = new Task(1, "Task 1", "Groceries", 0,  Instant.now(), Status.NEW);
+    private final Epic epic = new Epic(2, "Epic 1", "Go to the shop", 0, Instant.now(), Status.NEW);
+    private final Subtask subtask = new Subtask(1, "Shopping", "Bread", 0,
+            Instant.now(), 2, Status.NEW);
 
     // тесты для Задач
 
@@ -30,7 +31,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void addTask_shouldNotCreateATaskBecauseItsEmpty() {
+    void addTask_shouldNotCreateATaskIfItsEmpty() {
         Task task = manager.addTask(null);
 
         assertNull(task);
@@ -49,7 +50,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void getTaskById_shouldReturnNullBecauseCreatedTaskIsEmpty() {
+    void getTaskById_shouldReturnNullIfCreatedTaskIsEmpty() {
         manager.addTask(null);
         Task task = manager.getTaskById(0);
 
@@ -66,7 +67,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void deleteTasks_shouldNotDeleteTasksBecauseListIsEmpty() {
+    void deleteTasks_shouldNotDeleteTasksIfListIsEmpty() {
         manager.addTask(null);
         manager.deleteTasks();
         HashMap<Integer, Task> mapOfTasks = manager.getTasks();
@@ -78,8 +79,8 @@ abstract class ManagerTest<T extends Manager> {
 
     @Test
     void deleteTaskById_shouldDeleteTaskById() {
-        manager.addTask(task);
-        manager.deleteTaskById(1);
+        Task thisTask = manager.addTask(task);
+        manager.deleteTaskById(thisTask.getId());
         HashMap<Integer, Task> mapOfTasks = manager.getTasks();
         List<Task> listOfTasks = manager.getPrioritizedTasks();
 
@@ -88,7 +89,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void deleteTaskById_shouldNotDeleteTaskBecausePassedIdIsIncorrect() {
+    void deleteTaskById_shouldNotDeleteTaskIfPassedIdIsIncorrect() {
         Task thisTask = manager.addTask(task);
         manager.deleteTaskById(99);
         HashMap<Integer, Task> mapOfTasks = manager.getTasks();
@@ -104,11 +105,6 @@ abstract class ManagerTest<T extends Manager> {
 
         assertNotNull(mapOfTasks);
         assertEquals(1, mapOfTasks.size());
-    }
-
-    @Test
-    void getTasks_shouldReturnAnEmptyMapOfTasks() {
-        assertTrue(manager.getTasks().isEmpty());
     }
 
     @Test
@@ -130,7 +126,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void updateTask_shouldNotUpdateTaskBecauseItsEmpty() {
+    void updateTask_shouldNotUpdateTaskIfItsEmpty() {
         Task thisTask = manager.addTask(task);
         manager.updateTask(null);
 
@@ -154,11 +150,14 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void addSubtask_shouldNotCreateASubtaskBecauseItsEmpty() {
+    void addSubtask_shouldNotCreateASubtaskIfItsEmpty() {
         manager.addEpic(null);
         Subtask subtask = manager.addSubtask(null);
-
+        HashMap<Integer, Subtask> mapOfSubtasks = manager.getSubtasks();
+        List<Subtask> listOfSubtasks = new ArrayList<>(mapOfSubtasks.values());
+;
         assertNull(subtask);
+        assertTrue(listOfSubtasks.isEmpty());
     }
 
     @Test
@@ -175,7 +174,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void getSubtaskById_shouldReturnNullBecauseCreatedSubtaskIsEmpty() {
+    void getSubtaskById_shouldReturnNullIfCreatedSubtaskIsEmpty() {
         manager.addSubtask(null);
         Subtask subtask = manager.getSubtaskById(0);
 
@@ -192,7 +191,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void deleteSubtasks_shouldNotDeleteSubtasksBecauseListIsEmpty() {
+    void deleteSubtasks_shouldNotDeleteSubtasksIfListIsEmpty() {
         manager.addSubtask(subtask);
         manager.deleteSubtasks();
         HashMap<Integer, Subtask> mapOfSubtasks = manager.getSubtasks();
@@ -213,7 +212,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void deleteSubtaskById_shouldNotDeleteSubtaskBecausePassedIdIsIncorrect() {
+    void deleteSubtaskById_shouldNotDeleteSubtaskIfPassedIdIsIncorrect() {
         manager.addEpic(epic);
         Subtask thisSubtask = manager.addSubtask(subtask);
         manager.deleteSubtaskById(99);
@@ -225,11 +224,14 @@ abstract class ManagerTest<T extends Manager> {
 
     @Test
     void getSubtasks_shouldReturnMapOfSubtasks() {
-        manager.addEpic(epic);
-        manager.addSubtask(subtask);
+        Epic thisEpic = manager.addEpic(epic);
+        Subtask thisSubtask = manager.addSubtask(subtask);
+        HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
         HashMap<Integer, Subtask> mapOfSubtasks = manager.getSubtasks();
 
         assertNotNull(mapOfSubtasks);
+        assertTrue(mapOfSubtasks.containsValue(thisSubtask));
+        assertTrue(mapOfEpics.containsValue(thisEpic));
         assertEquals(1, mapOfSubtasks.size());
     }
 
@@ -251,13 +253,13 @@ abstract class ManagerTest<T extends Manager> {
     void updateSubtask_shouldUpdateSubtaskToStatusDONE() {
         manager.addEpic(epic);
         Subtask thisSubtask = manager.addSubtask(subtask);
-        subtask.setStatus(Status.DONE);
+        thisSubtask.setStatus(Status.DONE);
 
         assertEquals(Status.DONE, manager.getSubtaskById(thisSubtask.getId()).getStatus());
     }
 
     @Test
-    void updateSubtask_shouldNotUpdateSubtaskBecauseItsEmpty() {
+    void updateSubtask_shouldNotUpdateSubtaskIfItsEmpty() {
         manager.addEpic(epic);
         manager.addSubtask(subtask);
         manager.updateSubtask(null);
@@ -280,7 +282,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void addEpic_shouldNotCreateAnEpicBecauseItsEmpty() {
+    void addEpic_shouldNotCreateAnEpicIfItsEmpty() {
         Epic epic = manager.addEpic(null);
 
         assertNull(epic);
@@ -299,7 +301,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void getEpicById_shouldReturnNullBecauseCreatedEpicIsEmpty() {
+    void getEpicById_shouldReturnNullIfCreatedEpicIsEmpty() {
         manager.addEpic(null);
         Epic epic = manager.getEpicById(0);
 
@@ -316,7 +318,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void deleteEpics_shouldNotDeleteEpicBecauseListIsEmpty() {
+    void deleteEpics_shouldNotDeleteEpicIfListIsEmpty() {
         manager.addEpic(epic);
         manager.deleteEpics();
         HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
@@ -338,7 +340,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void deleteEpicById_shouldNotDeleteEpicBecausePassedIdIsIncorrect() {
+    void deleteEpicById_shouldNotDeleteEpicIfPassedIdIsIncorrect() {
         Epic thisEpic = manager.addEpic(epic);
         manager.deleteEpicById(0);
         HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
@@ -378,7 +380,7 @@ abstract class ManagerTest<T extends Manager> {
     }
 
     @Test
-    void updateEpic_shouldNotUpdateEpicBecauseItsEmpty() {
+    void updateEpic_shouldNotUpdateEpicIfItsEmpty() {
         Epic thisEpic = manager.addEpic(epic);
         manager.updateEpic(null);
 
