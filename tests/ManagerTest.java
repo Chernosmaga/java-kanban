@@ -53,8 +53,10 @@ abstract class ManagerTest<T extends Manager> {
     void getTaskById_shouldReturnNullIfCreatedTaskIsEmpty() {
         manager.addTask(null);
         Task task = manager.getTaskById(0);
+        HashMap<Integer, Task> mapOfTasks = manager.getTasks();
 
         assertNull(task);
+        assertEquals(Collections.EMPTY_MAP, mapOfTasks);
     }
 
     @Test
