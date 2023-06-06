@@ -35,7 +35,7 @@ public class InMemoryManager implements Manager {
 
     @Override
     public Task addTask(Task task) {
-        if (task != null) {
+        if (task != null && !tasks.containsKey(task.getId())) {
             int newId = idIncrease();
             task.setId(newId);
             tasks.put(newId, task);
@@ -91,7 +91,7 @@ public class InMemoryManager implements Manager {
 
     @Override
     public Epic addEpic(Epic epic) {
-        if (epic != null) {
+        if (epic != null && !epics.containsKey(epic.getId())) {
             int newId = idIncrease();
             epic.setId(newId);
             epics.put(newId, epic);
@@ -152,7 +152,7 @@ public class InMemoryManager implements Manager {
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
-        if (subtask != null) {
+        if (subtask != null && !subtasks.containsKey(subtask.getId())) {
             int newId = idIncrease();
             subtask.setId(newId);
             Epic epic = epics.get(subtask.getEpicId());
