@@ -46,8 +46,7 @@ class FileBackedManagerTest extends ManagerTest<FileBackedManager> {
     void save_loadFromFile_shouldSaveAndLoadCorrectly() {
         Task thisTask = manager.addTask(task);
         Epic thisEpic = manager.addEpic(epic);
-        FileBackedManager fileManager = new FileBackedManager(Managers.getDefaultHistory(), file);
-        fileManager.loadFromFile();
+        manager.loadFromFile();
         HashMap<Integer, Task> mapOfTasks = manager.getTasks();
         List<Task> listOfTasks = new ArrayList<>(mapOfTasks.values());
         HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
@@ -59,9 +58,8 @@ class FileBackedManagerTest extends ManagerTest<FileBackedManager> {
 
     @Test
     void save_loadFromFile_shouldSaveAndLoadEmptyKindOfTasks() {
-        FileBackedManager fileManager = new FileBackedManager(Managers.getDefaultHistory(), file);
-        fileManager.save();
-        fileManager.loadFromFile();
+        manager.save();
+        manager.loadFromFile();
 
         assertEquals(Collections.EMPTY_MAP, manager.getTasks());
         assertEquals(Collections.EMPTY_MAP, manager.getEpics());
@@ -70,12 +68,10 @@ class FileBackedManagerTest extends ManagerTest<FileBackedManager> {
 
     @Test
     void save_loadFromFile_shouldSaveAndLoadEmptyHistory() {
-        FileBackedManager fileManager = new FileBackedManager(Managers.getDefaultHistory(), file);
-        fileManager.save();
-        fileManager.loadFromFile();
+        manager.save();
+        manager.loadFromFile();
 
         assertEquals(Collections.EMPTY_LIST, manager.getHistory());
     }
-
 
 }
