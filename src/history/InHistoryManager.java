@@ -1,6 +1,6 @@
 package history;
 
-import enums.Node;
+import utils.Node;
 import tasks.Task;
 
 import java.util.*;
