@@ -1,15 +1,12 @@
 package tasks;
 
-import enums.Status;
-import enums.Type;
+import utils.Status;
+import utils.Type;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 public class Subtask extends Task {
-    private Type type;
-    private int epicId;
+    protected int epicId;
 
     public Subtask(int epicId, String title, String description, Integer id, Status status) {
         super(title, description, id, status);
@@ -43,14 +40,14 @@ public class Subtask extends Task {
 
     @Override
     public Type getType() {
-        return type;
+        return Type.SUBTASK;
     }
 
     @Override
     public String toString() {
         return "Subtask{" +
-                "epic id= " + getEpicId() +
-                "title='" + getTitle() + '\'' +
+                "epic id=" + getEpicId() +
+                " title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", id=" + getId() +
                 ", status='" + getStatus() + ", start time=" + getStartTime().toEpochMilli() +

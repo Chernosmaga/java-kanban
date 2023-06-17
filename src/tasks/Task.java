@@ -1,22 +1,18 @@
 package tasks;
 
-import enums.Status;
-import enums.Type;
+import utils.Status;
+import utils.Type;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Formatter;
 
 public class Task {
-    private String title;
-    private String description;
-    private int id;
-    private Status status;
-    private Type type;
-    private Instant startTime = Instant.now();
-    private long duration;
+    protected String title;
+    protected String description;
+    protected int id;
+    protected Status status;
+    protected Type type;
+    protected Instant startTime;
+    protected long duration;
 
     public Task(String title, String description, Integer id, Status status) {
         this.title = title;
