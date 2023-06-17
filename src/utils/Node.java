@@ -1,4 +1,4 @@
-package enums;
+package utils;
 
 public class Node<T> {
     private T data;
