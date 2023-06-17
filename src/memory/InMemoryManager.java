@@ -1,6 +1,6 @@
 package memory;
 
-import enums.Status;
+import utils.Status;
 import exceptions.TaskConflictException;
 import history.HistoryManager;
 import managers.Managers;
@@ -15,9 +15,7 @@ public class InMemoryManager implements Manager {
     protected HashMap<Integer, Subtask> subtasks = new HashMap<>();
     protected HashMap<Integer, Epic> epics = new HashMap<>();
     protected HistoryManager historyManager;
-    // компаратор для сравнения задач по типу времени начала
     private final Comparator<Task> comparator = Comparator.comparing(Task::getStartTime);
-    // сет из отсортированных задач по компаратору
     private final Set<Task> prioritizedTasks = new TreeSet<>(comparator);
 
     public InMemoryManager() {
@@ -36,8 +34,11 @@ public class InMemoryManager implements Manager {
     @Override
     public Task addTask(Task task) {
         if (task != null && !tasks.containsKey(task.getId())) {
-            int newId = idIncrease();
-            task.setId(newId);
+            int newId = task.getId();
+            if (newId == 0) {
+                newId = idIncrease();
+                task.setId(newId);
+            }
             tasks.put(newId, task);
             addTaskToPrioritizedList(task);
         } else {
@@ -92,8 +93,11 @@ public class InMemoryManager implements Manager {
     @Override
     public Epic addEpic(Epic epic) {
         if (epic != null && !epics.containsKey(epic.getId())) {
-            int newId = idIncrease();
-            epic.setId(newId);
+            int newId = epic.getId();
+            if (newId == 0) {
+                newId = idIncrease();
+                epic.setId(newId);
+            }
             epics.put(newId, epic);
         } else {
             return null;
@@ -153,8 +157,11 @@ public class InMemoryManager implements Manager {
     @Override
     public Subtask addSubtask(Subtask subtask) {
         if (subtask != null && !subtasks.containsKey(subtask.getId())) {
-            int newId = idIncrease();
-            subtask.setId(newId);
+            int newId = subtask.getId();
+            if (newId == 0) {
+                newId = idIncrease();
+                subtask.setId(newId);
+            }
             Epic epic = epics.get(subtask.getEpicId());
             if (epic != null) {
                 addTaskToPrioritizedList(subtask);
@@ -298,46 +305,31 @@ public class InMemoryManager implements Manager {
         epic.setDuration(duration);
     }
 
-    private void addTaskToPrioritizedList(Task task) {
-        prioritizedTasks.add(task);
-        validation();
-    }
-
-    private boolean timeChecker(Task task) {
-        List<Task> tasks = getPrioritizedTasks();
-        int size = 0;
-        if (tasks.size() > 0) {
-            for (Task value : tasks) {
-                if (value.getStartTime() != null && value.getEndTime() != null) {
-                    if (task.getStartTime().isBefore(value.getStartTime()) &&
-                            task.getEndTime().isBefore(value.getStartTime())) {
-                        return true;
-                    } else if (task.getStartTime().isAfter(value.getEndTime()) &&
-                            task.getEndTime().isAfter(value.getEndTime())) {
-                        return true;
-                    }
-                } else {
-                    size++;
-                }
-            }
-            return size == tasks.size();
+    public void addTaskToPrioritizedList(Task task) {
+        boolean isValidated = validation(task);
+        if (!isValidated) {
+            prioritizedTasks.add(task);
         } else {
-            return true;
+            throw new TaskConflictException("There is a problem caused by similar tasks time");
         }
     }
 
-    private void validation() {
-        List<Task> tasks = getPrioritizedTasks();
-
-        for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-
-            boolean isTaskTimeSimilar = timeChecker(task);
-
-            if (isTaskTimeSimilar) {
-                throw new TaskConflictException("Task conflict caused by similar tasks time");
+    private boolean validation(Task task) {
+        boolean isOverlapping = false;
+        Instant startOfTask = task.getStartTime();
+        Instant endOfTask = task.getEndTime();
+        for (Task taskValue : prioritizedTasks) {
+            if (taskValue.getStartTime() == null) {
+                continue;
             }
+            Instant startTime = taskValue.getStartTime();
+            Instant endTime = taskValue.getEndTime();
+            boolean isCovering = startTime.isBefore(startOfTask) && endTime.isAfter(endOfTask);
+            boolean isOverlappingByEnd = startTime.isBefore(startOfTask) && endTime.isAfter(startOfTask);
+            boolean isOverlappingByStart = startTime.isBefore(endOfTask) && endTime.isAfter(endOfTask);
+            boolean isWithin = startTime.isAfter(startOfTask) && endTime.isBefore(endOfTask);
+            isOverlapping = isCovering || isOverlappingByEnd || isOverlappingByStart || isWithin;
         }
+        return isOverlapping;
     }
-
 }

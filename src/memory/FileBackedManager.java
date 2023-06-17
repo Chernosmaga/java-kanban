@@ -1,27 +1,24 @@
 package memory;
 
-import enums.Status;
-import enums.Type;
+import utils.Status;
+import utils.Type;
 import exceptions.*;
 import history.HistoryManager;
 import tasks.*;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.*;
 
-import static enums.Type.*;
+import static utils.Type.*;
 
 public class FileBackedManager extends InMemoryManager {
-    private File file;
-    private InMemoryManager manager = new InMemoryManager();
+    private final File file;
+    private final InMemoryManager manager = new InMemoryManager();
 
-    public FileBackedManager(HistoryManager historyManager, File file) {
+    public FileBackedManager(HistoryManager historyManager, String path) {
         super(historyManager);
-        this.file = file;
+        this.file = new File(path);
     }
 
     @Override
@@ -223,5 +220,4 @@ public class FileBackedManager extends InMemoryManager {
         }
 
     }
-
 }

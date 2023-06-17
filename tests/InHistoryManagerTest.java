@@ -1,4 +1,4 @@
-import enums.Status;
+import utils.Status;
 import history.HistoryManager;
 import history.InHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,11 +16,11 @@ class InHistoryManagerTest {
     private HistoryManager historyManager;
 
     private final Task task = new Task(1, "Task 1", "Groceries", 0,
-            Instant.now(), Status.NEW);
+            Instant.ofEpochMilli(1685998800000L), Status.NEW);
     private final Task task2 = new Task(2, "Task 2", "Sport", 0,
-            Instant.now(), Status.IN_PROGRESS);
+            Instant.ofEpochMilli(1686603600000L), Status.IN_PROGRESS);
     private final Task task3 = new Task(3, "Task 3", "Household chores", 0,
-            Instant.now(), Status.DONE);
+            Instant.ofEpochMilli(1686085200000L), Status.DONE);
 
     @BeforeEach
     void beforeEach() {

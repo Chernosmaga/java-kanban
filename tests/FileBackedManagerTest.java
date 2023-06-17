@@ -1,4 +1,4 @@
-import enums.Status;
+import utils.Status;
 import managers.Managers;
 import memory.FileBackedManager;
 import org.junit.jupiter.api.AfterEach;
@@ -24,13 +24,13 @@ class FileBackedManagerTest extends ManagerTest<FileBackedManager> {
     private final File file = new File(String.valueOf(path));
 
     private final Task task = new Task(1, "Task 1", "Groceries", 0,
-            Instant.now(), Status.NEW);
+            Instant.ofEpochMilli(1686344400000L), Status.NEW);
     private final Epic epic = new Epic(2, "Epic 1", "Go to the shop", 0,
-            Instant.now(), Status.NEW);
+            Instant.ofEpochMilli(1686430800000L), Status.NEW);
 
     @BeforeEach
     void beforeEach() {
-        manager = new FileBackedManager(Managers.getDefaultHistory(), file);
+        manager = new FileBackedManager(Managers.getDefaultHistory(), "resources/back up.csv");
     }
 
     @AfterEach

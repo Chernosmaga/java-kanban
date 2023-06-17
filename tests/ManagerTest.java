@@ -1,4 +1,4 @@
-import enums.Status;
+import utils.Status;
 import memory.Manager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -12,10 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 abstract class ManagerTest<T extends Manager> {
     protected T manager;
-    private final Task task = new Task(1, "Task 1", "Groceries", 0,  Instant.now(), Status.NEW);
-    private final Epic epic = new Epic(2, "Epic 1", "Go to the shop", 0, Instant.now(), Status.NEW);
-    private final Subtask subtask = new Subtask(1, "Shopping", "Bread", 0,
-            Instant.now(), 2, Status.NEW);
+
+    private final Task task = new Task(1, "Task 1", "Groceries", 2,
+            Instant.ofEpochMilli(1685998800000L), Status.NEW);
+    private final Epic epic = new Epic(3, "Epic 1", "Shopping", 11,
+            Instant.ofEpochMilli(1686603600000L), Status.DONE);
+    private final Subtask subtask = new Subtask(3, "Subtask 1", "Buy milk", 14,
+            Instant.ofEpochMilli(1686085200000L), 12, Status.IN_PROGRESS);
 
     // тесты для Задач
 
@@ -293,12 +296,12 @@ abstract class ManagerTest<T extends Manager> {
     @Test
     void getEpicById_shouldReturnCreatedEpicById() {
         manager.addEpic(epic);
-        Epic epic = manager.getEpicById(1);
+        Epic epic = manager.getEpicById(2);
         HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
         List<Epic> listOfEpics = new ArrayList<>(mapOfEpics.values());
 
         assertNotNull(epic.getStatus());
-        assertEquals(1, epic.getId());
+        assertEquals(2, epic.getId());
         assertEquals(List.of(epic), listOfEpics);
     }
 
