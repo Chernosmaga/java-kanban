@@ -1,6 +1,6 @@
 import utils.Status;
-import history.HistoryManager;
-import history.InHistoryManager;
+import managers.HistoryManager;
+import managers.InHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Task;

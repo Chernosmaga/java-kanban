@@ -29,10 +29,10 @@ public class KVTaskClient {
         apiToken = response.body();
     }
 
-    public void put(String key, String json) {
+    public void put(String key, String requestBody) {
         URI uri = URI.create(serverUrl + "/save/" + key + "?API_TOKEN=" + apiToken);
         HttpRequest request = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .uri(uri)
                 .header("Accept", "application/json")
                 .build();

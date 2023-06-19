@@ -1,5 +1,6 @@
-package history;
+package managers;
 
+import managers.HistoryManager;
 import utils.Node;
 import tasks.Task;
 

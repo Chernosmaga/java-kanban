@@ -1,9 +1,7 @@
-package memory;
+package managers;
 
 import utils.Status;
 import exceptions.TaskConflictException;
-import history.HistoryManager;
-import managers.Managers;
 import tasks.*;
 
 import java.time.Instant;

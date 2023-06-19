@@ -5,9 +5,10 @@ import utils.Type;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
-    protected final ArrayList<Integer> subtasksIds = new ArrayList<>();
+    protected List<Integer> subtasksIds = new ArrayList<>();
     protected static Instant endTime = Instant.ofEpochSecond(32503669200000L);
 
     public Epic(String title, String description, Integer id, Status status) {
@@ -26,9 +27,19 @@ public class Epic extends Task {
         this.type = Type.EPIC;
     }
 
+    public Epic(ArrayList<Integer> subtasksIds,
+                int id, String title,
+                String description, long duration,
+                Instant startTime, Status status) {
+        super(id, title, description, duration, startTime, status);
+        this.subtasksIds = subtasksIds;
+        this.endTime = super.getEndTime();
+        this.type = Type.EPIC;
+    }
+
     public Epic() {}
 
-    public ArrayList<Integer> getSubtasksIds() {
+    public List<Integer> getSubtasksIds() {
         return subtasksIds;
     }
 

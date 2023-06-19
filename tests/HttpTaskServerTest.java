@@ -2,7 +2,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import utils.Status;
 import managers.Managers;
-import memory.Manager;
+import managers.Manager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

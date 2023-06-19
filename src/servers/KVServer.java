@@ -24,81 +24,81 @@ public class KVServer {
         server.createContext("/load", this::load);
     }
 
-    private void load(HttpExchange h) throws IOException {
+    private void load(HttpExchange httpExchange) throws IOException {
         try {
             System.out.println("\n/load");
-            if (!hasAuth(h)) {
+            if (!hasAuth(httpExchange)) {
                 System.out.println("Unauthorized request, API_TOKEN parameter needed in a query with value of API-key");
-                h.sendResponseHeaders(403, 0);
+                httpExchange.sendResponseHeaders(403, 0);
                 return;
             }
-            if ("GET".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/load/".length());
+            if ("GET".equals(httpExchange.getRequestMethod())) {
+                String key = httpExchange.getRequestURI().getPath().substring("/load/".length());
                 if (key.isEmpty()) {
                     System.out.println("Key is empty, unable to get a value. Key must be pointed: /load/{key}");
-                    h.sendResponseHeaders(400, 0);
+                    httpExchange.sendResponseHeaders(400, 0);
                     return;
                 }
                 if (data.get(key) == null) {
                     System.out.println("Untracked value for " + key);
-                    h.sendResponseHeaders(404, 0);
+                    httpExchange.sendResponseHeaders(404, 0);
                     return;
                 }
-                sendText(h, data.get(key));
-                h.sendResponseHeaders(200, 0);
+                sendText(httpExchange, data.get(key));
+                httpExchange.sendResponseHeaders(200, 0);
             } else {
-                System.out.println("/load waits for GET-request, but got: " + h.getRequestMethod());
-                h.sendResponseHeaders(405, 0);
+                System.out.println("/load waits for GET-request, but got: " + httpExchange.getRequestMethod());
+                httpExchange.sendResponseHeaders(405, 0);
             }
         } finally {
-            h.close();
+            httpExchange.close();
         }
     }
 
-    private void save(HttpExchange h) throws IOException {
+    private void save(HttpExchange httpExchange) throws IOException {
         try {
             System.out.println("\n/save");
-            if (!hasAuth(h)) {
+            if (!hasAuth(httpExchange)) {
                 System.out.println("Unauthorized request, API_TOKEN parameter needed in a query with value of API-key");
-                h.sendResponseHeaders(403, 0);
+                httpExchange.sendResponseHeaders(403, 0);
                 return;
             }
-            if ("POST".equals(h.getRequestMethod())) {
-                String key = h.getRequestURI().getPath().substring("/save/".length());
+            if ("POST".equals(httpExchange.getRequestMethod())) {
+                String key = httpExchange.getRequestURI().getPath().substring("/save/".length());
                 if (key.isEmpty()) {
                     System.out.println("Key is empty, unable to get a value. Key must be pointed: /save/{key}");
-                    h.sendResponseHeaders(400, 0);
+                    httpExchange.sendResponseHeaders(400, 0);
                     return;
                 }
-                String value = readText(h);
+                String value = readText(httpExchange);
                 if (value.isEmpty()) {
                     System.out.println("Value is empty, unable to save. Value needs to be pointed in a body request");
-                    h.sendResponseHeaders(400, 0);
+                    httpExchange.sendResponseHeaders(400, 0);
                     return;
                 }
                 data.put(key, value);
                 System.out.println("Value for key " + key + " was successfully updated");
-                h.sendResponseHeaders(200, 0);
+                httpExchange.sendResponseHeaders(200, 0);
             } else {
-                System.out.println("/save waits for POST-request, but got: " + h.getRequestMethod());
-                h.sendResponseHeaders(405, 0);
+                System.out.println("/save waits for POST-request, but got: " + httpExchange.getRequestMethod());
+                httpExchange.sendResponseHeaders(405, 0);
             }
         } finally {
-            h.close();
+            httpExchange.close();
         }
     }
 
-    private void register(HttpExchange h) throws IOException {
+    private void register(HttpExchange httpExchange) throws IOException {
         try {
             System.out.println("\n/register");
-            if ("GET".equals(h.getRequestMethod())) {
-                sendText(h, apiToken);
+            if ("GET".equals(httpExchange.getRequestMethod())) {
+                sendText(httpExchange, apiToken);
             } else {
-                System.out.println("/register waits for GET-request, but got " + h.getRequestMethod());
-                h.sendResponseHeaders(405, 0);
+                System.out.println("/register waits for GET-request, but got " + httpExchange.getRequestMethod());
+                httpExchange.sendResponseHeaders(405, 0);
             }
         } finally {
-            h.close();
+            httpExchange.close();
         }
     }
 
@@ -117,19 +117,19 @@ public class KVServer {
         return "" + System.currentTimeMillis();
     }
 
-    protected boolean hasAuth(HttpExchange h) {
-        String rawQuery = h.getRequestURI().getRawQuery();
+    private boolean hasAuth(HttpExchange httpExchange) {
+        String rawQuery = httpExchange.getRequestURI().getRawQuery();
         return rawQuery != null && (rawQuery.contains("API_TOKEN=" + apiToken) || rawQuery.contains("API_TOKEN=DEBUG"));
     }
 
-    protected String readText(HttpExchange h) throws IOException {
-        return new String(h.getRequestBody().readAllBytes(), UTF_8);
+    private String readText(HttpExchange httpExchange) throws IOException {
+        return new String(httpExchange.getRequestBody().readAllBytes(), UTF_8);
     }
 
-    protected void sendText(HttpExchange h, String text) throws IOException {
+    private void sendText(HttpExchange httpExchange, String text) throws IOException {
         byte[] resp = text.getBytes(UTF_8);
-        h.getResponseHeaders().add("Content-Type", "application/json");
-        h.sendResponseHeaders(200, resp.length);
-        h.getResponseBody().write(resp);
+        httpExchange.getResponseHeaders().add("Content-Type", "application/json");
+        httpExchange.sendResponseHeaders(200, resp.length);
+        httpExchange.getResponseBody().write(resp);
     }
 }

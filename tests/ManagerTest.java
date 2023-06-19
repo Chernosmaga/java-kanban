@@ -1,5 +1,5 @@
 import utils.Status;
-import memory.Manager;
+import managers.Manager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
@@ -16,9 +16,9 @@ abstract class ManagerTest<T extends Manager> {
     private final Task task = new Task(1, "Task 1", "Groceries", 2,
             Instant.ofEpochMilli(1685998800000L), Status.NEW);
     private final Epic epic = new Epic(3, "Epic 1", "Shopping", 11,
-            Instant.ofEpochMilli(1686603600000L), Status.DONE);
+            Instant.ofEpochMilli(1686603600000L), Status.NEW);
     private final Subtask subtask = new Subtask(3, "Subtask 1", "Buy milk", 14,
-            Instant.ofEpochMilli(1686085200000L), 12, Status.IN_PROGRESS);
+            Instant.ofEpochMilli(1686085200000L), 12, Status.NEW);
 
     // тесты для Задач
 
@@ -174,7 +174,7 @@ abstract class ManagerTest<T extends Manager> {
         List<Subtask> listOfSubtasks = new ArrayList<>(mapOfSubtasks.values());
 
         assertNotNull(thisSubtask.getStatus());
-        assertEquals(2, thisSubtask.getId());
+        assertEquals(12, thisSubtask.getId());
         assertEquals(List.of(thisSubtask), listOfSubtasks);
     }
 
@@ -296,12 +296,12 @@ abstract class ManagerTest<T extends Manager> {
     @Test
     void getEpicById_shouldReturnCreatedEpicById() {
         manager.addEpic(epic);
-        Epic epic = manager.getEpicById(2);
+        Epic epic = manager.getEpicById(3);
         HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
         List<Epic> listOfEpics = new ArrayList<>(mapOfEpics.values());
 
         assertNotNull(epic.getStatus());
-        assertEquals(2, epic.getId());
+        assertEquals(3, epic.getId());
         assertEquals(List.of(epic), listOfEpics);
     }
 
@@ -336,7 +336,7 @@ abstract class ManagerTest<T extends Manager> {
     @Test
     void deleteEpicById_shouldDeleteEpicById() {
         manager.addEpic(epic);
-        manager.deleteEpicById(1);
+        manager.deleteEpicById(3);
         HashMap<Integer, Epic> mapOfEpics = manager.getEpics();
         List<Task> listOfTasks = manager.getPrioritizedTasks();
 

@@ -1,9 +1,8 @@
-package memory;
+package managers;
 
 import utils.Status;
 import utils.Type;
 import exceptions.*;
-import history.HistoryManager;
 import tasks.*;
 
 import java.io.*;
@@ -147,17 +146,29 @@ public class FileBackedManager extends InMemoryManager {
 
     private static Task fromString(String content) {
         Task task = new Task();
-        String[] elements = content.split(",");
-        int id = Integer.parseInt(elements[0]);
-        Type type = Type.valueOf(elements[1]);
-        String title = String.valueOf(elements[2]);
-        Status status = Status.valueOf(elements[3]);
-        String description = elements[4];
-        Instant startTime = Instant.parse(elements[5]);
-        long duration = Long.parseLong(elements[6]);
+        List<Integer> listOfSubtasksIds = new ArrayList<>();
+        int id = 0;
+        Type type = null;
+        String title = null;
+        Status status = null;
+        String description = null;
+        Instant startTime = null;
+        long duration = 0;
         int epicId = 0;
-        if (elements.length == 8) {
-            epicId = Integer.parseInt(elements[7]);
+        String[] elements = content.split(",");
+        if (elements[2].equals("EPIC")) {
+            listOfSubtasksIds = List.of(Integer.parseInt(elements[0]));
+        } else {
+            id = Integer.parseInt(elements[0]);
+            type = Type.valueOf(elements[1]);
+            title = String.valueOf(elements[2]);
+            status = Status.valueOf(elements[3]);
+            description = elements[4];
+            startTime = Instant.parse(elements[5]);
+            duration = Long.parseLong(elements[6]);
+            if (elements.length == 8) {
+                epicId = Integer.parseInt(elements[7]);
+            }
         }
 
         if (type == TASK) {
@@ -165,7 +176,7 @@ public class FileBackedManager extends InMemoryManager {
         } else if (type == SUBTASK) {
             return new Subtask(epicId, title, description, duration, startTime, id, status);
         } else if (type == EPIC) {
-            return new Epic(id, title, description, duration, startTime, status);
+            return new Epic((ArrayList<Integer>) listOfSubtasksIds, id, title, description, duration, startTime, status);
         }
         return task;
     }
